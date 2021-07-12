@@ -107,7 +107,7 @@ For development usage, through bundlers and similar tools:
 For CDN usage in the wild:
 
   * the `//unpkg.com/vanilla-elements` CDN points at the minified [es.js](./es.js) which *includes* the polyfill (it's the minified index)
-  * for minified skypack.dev minified file you can point at the `es.js` file directly: [//cdn.skypack.dev/vanilla-elements/es.js](https://cdn.skypack.dev/vanilla-elements/es.js)
+  * for `skypack.dev` minified file, you can point at the `es.js` file directly: [//cdn.skypack.dev/vanilla-elements/es.js](https://cdn.skypack.dev/vanilla-elements/es.js)
 
   </div>
 </details>
