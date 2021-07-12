@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>udefine</title>
+  <script type="module">
+  import {define, HTML} from '../es.js';
+
+  define('custom-element', class extends HTML.Element {
+    connectedCallback() {
+      this.textContent = 'CustomElement';
+    }
+  });
+
+  define('custom-div', class extends HTML.Div {
+    connectedCallback() {
+      this.textContent = 'CustomDiv';
+    }
+  });
+
+  const CustomFooter = define('custom-footer', class extends HTML.Footer {
+    connectedCallback() {
+      this.textContent = 'CustomFooter';
+    }
+  });
+
+  document.body.appendChild(new CustomFooter);
+  </script>
+</head>
+<body>
+  <custom-element></custom-element>
+  <div is="custom-div"></div>
+</body>
+</html>

@@ -1,0 +1,46 @@
+{
+  "name": "vanilla-elements",
+  "version": "0.0.0",
+  "description": "A Minimalistic Custom Elements Helper",
+  "scripts": {
+    "build": "npm run rollup && npm run terser && npm run size",
+    "terser": "terser index.js --module -m -c -o es.js",
+    "rollup": "rollup --config rollup/es.config.js && node rollup/helper.cjs",
+    "size": "echo 'Poly'; cat es.js | brotli | wc -c && echo ''; echo 'Main'; terser esm/main.js --module -m -c | brotli | wc -c"
+  },
+  "keywords": [
+    "custom",
+    "elements",
+    "builtins",
+    "helper"
+  ],
+  "author": "Andrea Giammarchi",
+  "license": "ISC",
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^13.0.0",
+    "rollup": "^2.53.1",
+    "terser": "^5.7.1",
+    "@webreflection/custom-elements-builtin": "^0.2.0"
+  },
+  "module": "./es.js",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./esm/main.js"
+    },
+    "./poly": {
+      "import": "./index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "unpkg": "./es.js",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WebReflection/vanilla-elements.git"
+  },
+  "bugs": {
+    "url": "https://github.com/WebReflection/vanilla-elements/issues"
+  },
+  "homepage": "https://github.com/WebReflection/vanilla-elements#readme"
+}
