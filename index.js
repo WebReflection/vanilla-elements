@@ -368,7 +368,6 @@ catch (o_O) {
  * @property {HTMLHeadingElement} H2 - a builtin custom element
  * @property {HTMLHeadingElement} H1 - a builtin custom element
  * @property {HTMLImageElement} Img - a builtin custom element
- * @property {HTMLOListElement} OList - a builtin custom element
  * @property {HTMLOListElement} OL - a builtin custom element
  * @property {HTMLParagraphElement} P - a builtin custom element
  * @property {HTMLTableCaptionElement} Caption - a builtin custom element
