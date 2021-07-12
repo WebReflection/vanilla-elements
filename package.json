@@ -1,6 +1,6 @@
 {
   "name": "vanilla-elements",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A Minimalistic Custom Elements Helper",
   "scripts": {
     "build": "npm run rollup && npm run terser && npm run size",
