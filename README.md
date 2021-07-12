@@ -1,5 +1,7 @@
 # Vanilla Elements
 
+<sup>**Social Media Photo by [Jocelyn Morales](https://unsplash.com/@molnj) on [Unsplash](https://unsplash.com/)**</sup>
+
 A Minimalistic Custom Elements Helper, with optional polyfill included, compatible with every evergreen browser.
 
 The default module export, which is ~0.4K, works natively in Chrome, Edge, and Firefox, but if you target Safari / WebKit too, you can use the `vanilla-elements/poly` variant, which is ~2K, and it includes proper features detection, leaving Chrome, Edge, and Firefox 100% native.
