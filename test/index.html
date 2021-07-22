@@ -25,6 +25,12 @@
     }
   });
 
+  document.head.appendChild(
+    document.createElement('style')
+  ).textContent = `
+    [is="custom-div"] { color: blue; }
+    [is="custom-footer"] { color: red; }
+  `;
   document.body.appendChild(new CustomFooter);
   </script>
 </head>

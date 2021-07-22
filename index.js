@@ -2,7 +2,7 @@
 
 try {
   class P extends HTMLParagraphElement {}
-  customElements.define('p-' + Date.now(), P, {extends: 'p'});
+  self.customElements.define('p-' + Date.now(), P, {extends: 'p'});
   new P;
 }
 catch (o_O) {
@@ -503,12 +503,19 @@ Object.getOwnPropertyNames(self).forEach(name => {
   if (/^HTML.*?Element$/.test(name)) {
     const Class = name.slice(4, -7) || ELEMENT;
     const Native = self[name];
+    const needsPatch = Native.name === name;
     [].concat(HTMLSpecial[Class] || Class).forEach(Tag => {
       HTML[Class] = HTML[Tag] = (
         Tag === ELEMENT ?
           class extends Native {} :
           class extends Native {
             static get [NAME]() { return Tag; }
+            constructor() {
+              super();
+              // @see https://github.com/whatwg/html/issues/5782
+              if (needsPatch && !this.hasAttribute('is') && /is="(.+?)"/.test(this.outerHTML))
+                this.setAttribute('is', RegExp.$1);
+            }
           }
       );
     });

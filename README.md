@@ -4,7 +4,7 @@
 
 A Minimalistic Custom Elements Helper, with optional polyfill included, compatible with every evergreen browser.
 
-The default module export, which is ~0.4K, works natively in Chrome, Edge, and Firefox, but if you target Safari / WebKit too, you can use the `vanilla-elements/poly` variant, which is ~2K, and it includes proper features detection, leaving Chrome, Edge, and Firefox 100% native.
+The default module export, which is ~0.5K, works natively in Chrome, Edge, and Firefox, but if you target Safari / WebKit too, you can use the `vanilla-elements/poly` variant, which is ~2K, and it includes proper features detection, leaving Chrome, Edge, and Firefox 100% native.
 
 ```js
 import {define, HTML} from 'vanilla-elements';
@@ -60,7 +60,7 @@ render(document.body, html`
   <summary><strong>What is the benefit of using this module?</strong></summary>
   <div>
 
-The feature detection for builtin extends is both ugly and not really Web friendly.
+Beside solving this [long outstanding bug](https://github.com/whatwg/html/issues/5782) out of the box, the feature detection for builtin extends is both ugly and not really Web friendly.
 
 One could simply include [@ungap/custom-elements](https://github.com/ungap/custom-elements#readme) polyfill on top of each page and call it a day, but I wanted to have only the missing part, builtin extends, embedded in a module, and this helper is perfect for that purpose.
 

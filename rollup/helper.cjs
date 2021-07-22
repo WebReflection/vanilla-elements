@@ -14,7 +14,7 @@ writeFileSync(
 
 try {
   class P extends HTMLParagraphElement {}
-  customElements.define('p-' + Date.now(), P, {extends: 'p'});
+  self.customElements.define('p-' + Date.now(), P, {extends: 'p'});
   new P;
 }
 catch (o_O) {
