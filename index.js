@@ -114,13 +114,13 @@ catch (o_O) {
   
   const QSA = 'querySelectorAll';
   
-  const {document: document$2, Element: Element$1, MutationObserver: MutationObserver$2, Set: Set$2, WeakMap: WeakMap$1} = self;
+  const {document: document$2, Element: Element$1, MutationObserver: MutationObserver$2, Set: Set$2, WeakMap: WeakMap$2} = self;
   
   const elements = element => QSA in element;
   const {filter} = [];
   
   var qsaObserver = options => {
-    const live = new WeakMap$1;
+    const live = new WeakMap$2;
     const drop = elements => {
       for (let i = 0, {length} = elements; i < length; i++)
         live.delete(elements[i]);
@@ -182,7 +182,7 @@ catch (o_O) {
   const {
     customElements: customElements$1, document: document$1,
     Element, MutationObserver: MutationObserver$1, Object: Object$1, Promise: Promise$1,
-    Map, Set: Set$1, WeakMap, Reflect
+    Map, Set: Set$1, WeakMap: WeakMap$1, Reflect
   } = self;
   
   const {attachShadow} = Element.prototype;
@@ -194,7 +194,7 @@ catch (o_O) {
   
   const {defineProperty, getOwnPropertyNames, setPrototypeOf} = Object$1;
   
-  const shadowRoots = new WeakMap;
+  const shadowRoots = new WeakMap$1;
   const shadows = new Set$1;
   
   const classes = new Map;
@@ -480,6 +480,7 @@ const NAME = Symbol('extends');
 
 const {customElements} = self;
 const {define: $define} = customElements;
+const names = new WeakMap;
 
 /**
  * Define a custom elements in the registry.
@@ -488,6 +489,7 @@ const {define: $define} = customElements;
  * @returns {function} the defined `Class` after definition
  */
 const define = (name, Class) => {
+  names.set(Class, name);
   const args = [name, Class];
   if (NAME in Class)
     args.push({extends: Class[NAME].toLowerCase()});
@@ -503,7 +505,6 @@ Object.getOwnPropertyNames(self).forEach(name => {
   if (/^HTML.*?Element$/.test(name)) {
     const Class = name.slice(4, -7) || ELEMENT;
     const Native = self[name];
-    const needsPatch = Native.name === name;
     [].concat(HTMLSpecial[Class] || Class).forEach(Tag => {
       HTML[Class] = HTML[Tag] = (
         Tag === ELEMENT ?
@@ -513,8 +514,8 @@ Object.getOwnPropertyNames(self).forEach(name => {
             constructor() {
               super();
               // @see https://github.com/whatwg/html/issues/5782
-              if (needsPatch && !this.hasAttribute('is') && /is="(.+?)"/.test(this.outerHTML))
-                this.setAttribute('is', RegExp.$1);
+              if (!this.hasAttribute('is'))
+                this.setAttribute('is', names.get(this.constructor));
             }
           }
       );

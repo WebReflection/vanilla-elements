@@ -132,6 +132,7 @@ const NAME = Symbol('extends');
 
 const {customElements} = self;
 const {define: $define} = customElements;
+const names = new WeakMap;
 
 /**
  * Define a custom elements in the registry.
@@ -140,6 +141,7 @@ const {define: $define} = customElements;
  * @returns {function} the defined `Class` after definition
  */
 export const define = (name, Class) => {
+  names.set(Class, name);
   const args = [name, Class];
   if (NAME in Class)
     args.push({extends: Class[NAME].toLowerCase()});
@@ -155,7 +157,6 @@ Object.getOwnPropertyNames(self).forEach(name => {
   if (/^HTML.*?Element$/.test(name)) {
     const Class = name.slice(4, -7) || ELEMENT;
     const Native = self[name];
-    const needsPatch = Native.name === name;
     [].concat(HTMLSpecial[Class] || Class).forEach(Tag => {
       HTML[Class] = HTML[Tag] = (
         Tag === ELEMENT ?
@@ -165,8 +166,8 @@ Object.getOwnPropertyNames(self).forEach(name => {
             constructor() {
               super();
               // @see https://github.com/whatwg/html/issues/5782
-              if (needsPatch && !this.hasAttribute('is') && /is="(.+?)"/.test(this.outerHTML))
-                this.setAttribute('is', RegExp.$1);
+              if (!this.hasAttribute('is'))
+                this.setAttribute('is', names.get(this.constructor));
             }
           }
       );
