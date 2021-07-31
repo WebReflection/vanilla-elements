@@ -451,6 +451,7 @@ catch (o_O) {
  */
 
 const ELEMENT = 'Element';
+const NAME = Symbol('extends');
 
 const HTMLSpecial = {
   Anchor: 'A',
@@ -476,8 +477,6 @@ const HTMLSpecial = {
   ]
 };
 
-const NAME = Symbol('extends');
-
 const {customElements} = self;
 const {define: $define} = customElements;
 const names = new WeakMap;
@@ -489,11 +488,11 @@ const names = new WeakMap;
  * @returns {function} the defined `Class` after definition
  */
 const define = (name, Class) => {
-  names.set(Class, name);
   const args = [name, Class];
   if (NAME in Class)
     args.push({extends: Class[NAME].toLowerCase()});
   $define.apply(customElements, args);
+  names.set(Class, name);
   return Class;
 };
 
@@ -512,9 +511,8 @@ Object.getOwnPropertyNames(self).forEach(name => {
           class extends Native {
             static get [NAME]() { return Tag; }
             constructor() {
-              super();
               // @see https://github.com/whatwg/html/issues/5782
-              if (!this.hasAttribute('is'))
+              if (!super().hasAttribute('is'))
                 this.setAttribute('is', names.get(this.constructor));
             }
           }
