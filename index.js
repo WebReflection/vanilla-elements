@@ -481,6 +481,12 @@ const {customElements} = self;
 const {define: $define} = customElements;
 const names = new WeakMap;
 
+/**
+ * Define a custom elements in the registry.
+ * @param {string} name the custom element name
+ * @param {function} Class the custom element class definition
+ * @returns {function} the defined `Class` after definition
+ */
 const $ = (name, Class) => {
   const args = [name, Class];
   if (NAME in Class)
@@ -493,8 +499,9 @@ const $ = (name, Class) => {
 /**
  * Define a custom elements in the registry.
  * @param {string} name the custom element name
- * @param {function} Class the custom element class definition
- * @returns {function} the defined `Class` after definition
+ * @param {function?} Class the custom element class definition. Optional when
+ *  used as decorator, instead of regular function.
+ * @returns {function} the defined `Class` after definition or a decorator
  */
 const define = (name, Class) => Class ?
   $(name, Class) :
