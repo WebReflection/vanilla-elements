@@ -505,7 +505,7 @@ const $ = (name, Class) => {
  */
 const define = (name, Class) => Class ?
   $(name, Class) :
-  (Class) => $(name, Class);
+  Class => $(name, Class);
 
 /** @type {HTML} */
 const HTML = {};

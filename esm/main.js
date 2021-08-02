@@ -157,7 +157,7 @@ const $ = (name, Class) => {
  */
 export const define = (name, Class) => Class ?
   $(name, Class) :
-  (Class) => $(name, Class);
+  Class => $(name, Class);
 
 /** @type {HTML} */
 export const HTML = {};
