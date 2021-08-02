@@ -14,13 +14,14 @@ define('my-comp', class extends HTML.Element {
   // native Custom Elements definition
 });
 
-// ... builtins extend simplified
+// ... builtins extend simplified ... and
 define('my-div', class extends HTML.Div {
   // native Custom Elements definition
 });
 
+// ... as decorator 🥳
+@define('my-footer')
 class MyFooter extends HTML.Footer {}
-define('my-footer', MyFooter);
 
 document.body.appendChild(new MyFooter);
 ```

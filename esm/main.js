@@ -133,13 +133,7 @@ const {customElements} = self;
 const {define: $define} = customElements;
 const names = new WeakMap;
 
-/**
- * Define a custom elements in the registry.
- * @param {string} name the custom element name
- * @param {function} Class the custom element class definition
- * @returns {function} the defined `Class` after definition
- */
-export const define = (name, Class) => {
+const $ = (name, Class) => {
   const args = [name, Class];
   if (NAME in Class)
     args.push({extends: Class[NAME].toLowerCase()});
@@ -147,6 +141,16 @@ export const define = (name, Class) => {
   names.set(Class, name);
   return Class;
 };
+
+/**
+ * Define a custom elements in the registry.
+ * @param {string} name the custom element name
+ * @param {function} Class the custom element class definition
+ * @returns {function} the defined `Class` after definition
+ */
+export const define = (name, Class) => Class ?
+  $(name, Class) :
+  (Class) => $(name, Class);
 
 /** @type {HTML} */
 export const HTML = {};
