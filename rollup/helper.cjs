@@ -13,9 +13,11 @@ writeFileSync(
   `/*! (c) Andrea Giammarchi - ISC */
 
 try {
-  class P extends HTMLParagraphElement {}
-  self.customElements.define('p-' + Date.now(), P, {extends: 'p'});
-  new P;
+  if (!self.customElements.get('f-d')) {
+    class D extends HTMLLIElement {}
+    self.customElements.define('f-d', D, {extends: 'li'});
+    new D;
+  }
 }
 catch (o_O) {
 ${before.trim().replace(/^/gm, '  ')}

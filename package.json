@@ -17,10 +17,10 @@
   "author": "Andrea Giammarchi",
   "license": "ISC",
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "^13.0.4",
+    "@rollup/plugin-node-resolve": "^13.0.6",
     "@webreflection/custom-elements-builtin": "^0.2.0",
-    "rollup": "^2.56.0",
-    "terser": "^5.7.1"
+    "rollup": "^2.59.0",
+    "terser": "^5.9.0"
   },
   "module": "./es.js",
   "type": "module",
