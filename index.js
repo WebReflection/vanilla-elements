@@ -514,8 +514,8 @@ const HTML = {};
 
 // ⚠ as for/of loop, this breaks WebKit 🤔
 Object.getOwnPropertyNames(self).forEach(name => {
-  if (/^HTML.*?Element$/.test(name)) {
-    const Class = name.slice(4, -7) || ELEMENT;
+  if (/^HTML(.*?)Element$/.test(name)) {
+    const Class = RegExp.$1 || ELEMENT;
     const Native = self[name];
     [].concat(HTMLSpecial[Class] || Class).forEach(Tag => {
       HTML[Class] = HTML[Tag] = (
