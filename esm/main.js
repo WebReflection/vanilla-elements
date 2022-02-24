@@ -106,7 +106,7 @@ export const EXTENDS = Symbol('extends');
 
 const {customElements} = self;
 const {define: $define} = customElements;
-const names = new WeakMap;
+const names = new Map;
 
 /**
 * Define a custom elements in the registry.

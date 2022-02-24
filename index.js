@@ -116,13 +116,13 @@ catch (o_O) {
   
   const QSA = 'querySelectorAll';
   
-  const {document: document$2, Element: Element$1, MutationObserver: MutationObserver$2, Set: Set$2, WeakMap: WeakMap$2} = self;
+  const {document: document$2, Element: Element$1, MutationObserver: MutationObserver$2, Set: Set$2, WeakMap: WeakMap$1} = self;
   
   const elements = element => QSA in element;
   const {filter} = [];
   
   var qsaObserver = options => {
-    const live = new WeakMap$2;
+    const live = new WeakMap$1;
     const drop = elements => {
       for (let i = 0, {length} = elements; i < length; i++)
         live.delete(elements[i]);
@@ -184,7 +184,7 @@ catch (o_O) {
   const {
     customElements: customElements$1, document: document$1,
     Element, MutationObserver: MutationObserver$1, Object: Object$1, Promise: Promise$1,
-    Map: Map$1, Set: Set$1, WeakMap: WeakMap$1, Reflect
+    Map: Map$1, Set: Set$1, WeakMap, Reflect
   } = self;
   
   const {attachShadow} = Element.prototype;
@@ -196,7 +196,7 @@ catch (o_O) {
   
   const {defineProperty, getOwnPropertyNames, setPrototypeOf} = Object$1;
   
-  const shadowRoots = new WeakMap$1;
+  const shadowRoots = new WeakMap;
   const shadows = new Set$1;
   
   const classes = new Map$1;
@@ -456,7 +456,7 @@ const EXTENDS = Symbol('extends');
 
 const {customElements} = self;
 const {define: $define} = customElements;
-const names = new WeakMap;
+const names = new Map;
 
 /**
 * Define a custom elements in the registry.
