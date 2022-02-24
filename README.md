@@ -89,11 +89,9 @@ As we can see, the definition through this module is more compact, elegant, and 
   <summary><strong>Why isn't the polyfill included by default?</strong></summary>
   <div>
 
-The only browser that needs a polyfill for builtin extends is Safari / WebKit, and it needs it only for builtin extends.
+The only browser that needs a polyfill for builtin extends is Safari / WebKit, and it needs it only for builtin extends, but not everyone develops for the Web, and not everyone uses builtin extends, so the sane default is to provide a minimal utility that simplifies custom elements registration that works out of the box in every modern browser.
 
-However, not everyone develop for the Web, and not everyone uses builtin extends, so the sane default is to provide a minimal utility that simplifies custom elements registration that works out of the box in every modern browser.
-
-Whenever the target needs to include Safari / WebKit, and builtin extends are used, it takes nothing to switch import from `vanilla-elements` to `vanilla-elements/poly`.
+Whenever the target needs to include Safari / WebKit, and builtin extends are used, it takes nothing to switch import from `vanilla-elements` to `vanilla-elements/poly` or use [an import-map](https://gist.github.com/WebReflection/5fc85856bba3d6eef794877fb5fa2a52) workaround to load the poly only in Safari.
 
   </div>
 </details>
