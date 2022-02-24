@@ -102,43 +102,18 @@
  * @property {HTMLPopupElement} Popup - a generic custom element
  */
 
-const ELEMENT = 'Element';
 export const EXTENDS = Symbol('extends');
-
-const HTMLSpecial = {
-  Anchor: 'A',
-  DList: 'DL',
-  Directory: 'Dir',
-  Heading: ['H6', 'H5', 'H4', 'H3', 'H2', 'H1'],
-  Image: 'Img',
-  OList: 'OL',
-  Paragraph: 'P',
-  TableCaption: 'Caption',
-  TableCell: ['TH', 'TD'],
-  TableRow: 'TR',
-  UList: 'UL',
-  // Generic Element based Classes
-  [ELEMENT]: [
-    'Article', 'Aside',
-    'Footer',
-    'Header',
-    'Main',
-    'Nav',
-    'Section',
-    ELEMENT
-  ]
-};
 
 const {customElements} = self;
 const {define: $define} = customElements;
 const names = new WeakMap;
 
 /**
- * Define a custom elements in the registry.
- * @param {string} name the custom element name
- * @param {function} Class the custom element class definition
- * @returns {function} the defined `Class` after definition
- */
+* Define a custom elements in the registry.
+* @param {string} name the custom element name
+* @param {function} Class the custom element class definition
+* @returns {function} the defined `Class` after definition
+*/
 const $ = (name, Class) => {
   const args = [name, Class];
   if (EXTENDS in Class)
@@ -149,37 +124,70 @@ const $ = (name, Class) => {
 };
 
 /**
- * Define a custom elements in the registry.
- * @param {string} name the custom element name
- * @param {function?} Class the custom element class definition. Optional when
- *  used as decorator, instead of regular function.
- * @returns {function} the defined `Class` after definition or a decorator
- */
+* Define a custom elements in the registry.
+* @param {string} name the custom element name
+* @param {function?} Class the custom element class definition. Optional when
+*  used as decorator, instead of regular function.
+* @returns {function} the defined `Class` after definition or a decorator
+*/
 export const define = (name, Class) => Class ?
   $(name, Class) :
   Class => $(name, Class);
 
-/** @type {HTML} */
-export const HTML = {};
+const ELEMENT = 'Element';
+const EMPTY = '';
+const HEADING = 'Heading';
+const PREFIX = 'HTML';
+const TABLECELL = 'TableCell';
 
-// ⚠ as for/of loop, this breaks WebKit 🤔
-Object.getOwnPropertyNames(self).forEach(name => {
-  if (/^HTML(.*?)Element$/.test(name)) {
-    const Class = RegExp.$1 || ELEMENT;
-    const Native = self[name];
-    [].concat(HTMLSpecial[Class] || Class).forEach(Tag => {
-      HTML[Class] = HTML[Tag] = (
-        Tag === ELEMENT ?
-          class extends Native {} :
-          class extends Native {
-            static get [EXTENDS]() { return Tag; }
-            constructor() {
-              // @see https://github.com/whatwg/html/issues/5782
-              if (!super().hasAttribute('is'))
-                this.setAttribute('is', names.get(this.constructor));
-            }
+const special = {
+  A: 'Anchor',
+  Caption: 'TableCaption',
+  DL: 'DList',
+  Dir: 'Directory',
+  Img: 'Image',
+  OL: 'OList',
+  P: 'Paragraph',
+  TR: 'TableRow',
+  UL: 'UList',
+
+  Article: EMPTY,
+  Aside: EMPTY,
+  Footer: EMPTY,
+  Header: EMPTY,
+  Main: EMPTY,
+  Nav: EMPTY,
+  [ELEMENT]: EMPTY,
+
+  H1: HEADING,
+  H2: HEADING,
+  H3: HEADING,
+  H4: HEADING,
+  H5: HEADING,
+  H6: HEADING,
+
+  TD: TABLECELL,
+  TH: TABLECELL,
+};
+
+/** @type {HTML} */
+export const HTML = new Proxy(new Map, {
+  get(map, Tag) {
+    if (!map.has(Tag)) {
+      const Native = self[PREFIX + Tag + ELEMENT] ||
+                     self[PREFIX + special[Tag] + ELEMENT];
+      map.set(Tag, Tag === ELEMENT ?
+        class extends Native {} :
+        class extends Native {
+          static get [EXTENDS]() { return Tag; }
+          constructor() {
+            // @see https://github.com/whatwg/html/issues/5782
+            if (!super().hasAttribute('is'))
+              this.setAttribute('is', names.get(this.constructor));
           }
+        }
       );
-    });
+    }
+    return map.get(Tag);
   }
 });
