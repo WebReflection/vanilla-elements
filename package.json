@@ -3,10 +3,11 @@
   "version": "0.2.3",
   "description": "A Minimalistic Custom Elements Helper",
   "scripts": {
-    "build": "npm run rollup && npm run terser && npm run size",
+    "build": "npm run rollup && npm run terser && npm run min && npm run size",
+    "min": "terser esm/main.js --module -m -c -o min.js",
     "terser": "terser index.js --module -m -c -o es.js",
     "rollup": "rollup --config rollup/es.config.js && node rollup/helper.cjs",
-    "size": "echo 'Poly'; cat es.js | brotli | wc -c && echo ''; echo 'Main'; terser esm/main.js --module -m -c | brotli | wc -c"
+    "size": "echo 'Poly'; cat es.js | brotli | wc -c && echo ''; echo 'Main'; cat min.js | brotli | wc -c"
   },
   "keywords": [
     "custom",
