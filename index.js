@@ -524,8 +524,8 @@ const special = {
 const HTML = new Proxy(new Map, {
   get(map, Tag) {
     if (!map.has(Tag)) {
-      const Native = self[PREFIX + Tag + ELEMENT] ||
-                     self[PREFIX + special[Tag] + ELEMENT];
+      const name = Tag in special ? special[Tag] : Tag;
+      const Native = self[PREFIX + name + ELEMENT];
       map.set(Tag, Tag === ELEMENT ?
         class extends Native {} :
         class extends Native {

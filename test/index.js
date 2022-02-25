@@ -2,6 +2,7 @@ import names from './constructors.js';
 import special from './special.js';
 
 globalThis.self || (globalThis.self = {
+  HTMLElement: class {},
   customElements: {
     define() {}
   }
