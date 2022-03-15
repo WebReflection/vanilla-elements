@@ -507,6 +507,7 @@ const EMPTY = '';
 const HEADING = 'Heading';
 const PREFIX = 'HTML';
 const TABLECELL = 'TableCell';
+const TABLE_SECTION = 'TableSection';
 
 const special = {
   A: 'Anchor',
@@ -536,6 +537,10 @@ const special = {
 
   TD: TABLECELL,
   TH: TABLECELL,
+
+  TBody: TABLE_SECTION,
+  TFoot: TABLE_SECTION,
+  THead: TABLE_SECTION,
 };
 
 /** @type {HTML} */
