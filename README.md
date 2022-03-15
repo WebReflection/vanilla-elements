@@ -93,6 +93,24 @@ The only browser that needs a polyfill for builtin extends is Safari / WebKit, a
 
 Whenever the target needs to include Safari / WebKit, and builtin extends are used, it takes nothing to switch import from `vanilla-elements` to `vanilla-elements/poly` or use [an import-map](https://gist.github.com/WebReflection/5fc85856bba3d6eef794877fb5fa2a52) workaround to load the poly only in Safari.
 
+
+```html
+<!doctype html>
+<script>
+(({document, chrome, netscape}) => {
+  const src = 'https://cdn.skypack.dev/vanilla-elements/';
+  const {head} = document;
+  const script = head.insertBefore(document.createElement('script'), head.firstChild);
+  script.type = 'importmap';
+  script.textContent = JSON.stringify({
+    imports: {
+      'vanilla-elements': (chrome || netscape) ? src : (src + 'es.js')
+    }
+  });
+})(self);
+</script>
+```
+
   </div>
 </details>
 
