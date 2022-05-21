@@ -102,6 +102,8 @@
  * @property {HTMLPopupElement} Popup - a generic custom element
  */
 
+import {ELEMENT, qualify} from '@webreflection/html-shortcuts';
+
 export const EXTENDS = Symbol('extends');
 
 const {customElements} = self;
@@ -134,53 +136,11 @@ export const define = (name, Class) => Class ?
   $(name, Class) :
   Class => $(name, Class);
 
-const ELEMENT = 'Element';
-const EMPTY = '';
-const HEADING = 'Heading';
-const PREFIX = 'HTML';
-const TABLECELL = 'TableCell';
-const TABLE_SECTION = 'TableSection';
-
-const special = {
-  A: 'Anchor',
-  Caption: 'TableCaption',
-  DL: 'DList',
-  Dir: 'Directory',
-  Img: 'Image',
-  OL: 'OList',
-  P: 'Paragraph',
-  TR: 'TableRow',
-  UL: 'UList',
-
-  Article: EMPTY,
-  Aside: EMPTY,
-  Footer: EMPTY,
-  Header: EMPTY,
-  Main: EMPTY,
-  Nav: EMPTY,
-  [ELEMENT]: EMPTY,
-
-  H1: HEADING,
-  H2: HEADING,
-  H3: HEADING,
-  H4: HEADING,
-  H5: HEADING,
-  H6: HEADING,
-
-  TD: TABLECELL,
-  TH: TABLECELL,
-
-  TBody: TABLE_SECTION,
-  TFoot: TABLE_SECTION,
-  THead: TABLE_SECTION,
-};
-
 /** @type {HTML} */
 export const HTML = new Proxy(new Map, {
   get(map, Tag) {
     if (!map.has(Tag)) {
-      const name = Tag in special ? special[Tag] : Tag;
-      const Native = self[PREFIX + name + ELEMENT];
+      const Native = self[qualify(Tag)];
       map.set(Tag, Tag === ELEMENT ?
         class extends Native {} :
         class extends Native {

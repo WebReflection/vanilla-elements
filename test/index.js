@@ -1,5 +1,6 @@
+import {namespace as special} from '@webreflection/html-shortcuts';
+
 import names from './constructors.js';
-import special from './special.js';
 
 globalThis.self || (globalThis.self = {
   HTMLElement: class {},

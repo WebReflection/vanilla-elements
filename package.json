@@ -44,5 +44,8 @@
   "bugs": {
     "url": "https://github.com/WebReflection/vanilla-elements/issues"
   },
-  "homepage": "https://github.com/WebReflection/vanilla-elements#readme"
+  "homepage": "https://github.com/WebReflection/vanilla-elements#readme",
+  "dependencies": {
+    "@webreflection/html-shortcuts": "^0.1.0"
+  }
 }
