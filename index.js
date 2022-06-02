@@ -58,24 +58,20 @@ catch (o_O) {
     };
   };
   
-  const TRUE = true, FALSE = false;
-  const QSA$1 = 'querySelectorAll';
   
-  function add(node) {
-    this.observe(node, {subtree: TRUE, childList: TRUE});
-  }
+  const TRUE = true, FALSE = false, QSA$1 = 'querySelectorAll';
   
   /**
    * Start observing a generic document or root element.
-   * @param {Function} callback triggered per each dis/connected node
-   * @param {Element?} root by default, the global document to observe
-   * @param {Function?} MO by default, the global MutationObserver
+   * @param {(node:Element, connected:boolean) => void} callback triggered per each dis/connected element
+   * @param {Document|Element} [root=document] by default, the global document to observe
+   * @param {Function} [MO=MutationObserver] by default, the global MutationObserver
+   * @param {string[]} [query=['*']] the selectors to use within nodes
    * @returns {MutationObserver}
    */
-  const notify = (callback, root, MO) => {
-    const loop = (nodes, added, removed, connected, pass) => {
-      for (let i = 0, {length} = nodes; i < length; i++) {
-        const node = nodes[i];
+  const notify = (callback, root = document, MO = MutationObserver, query = ['*']) => {
+    const loop = (nodes, selectors, added, removed, connected, pass) => {
+      for (const node of nodes) {
         if (pass || (QSA$1 in node)) {
           if (connected) {
             if (!added.has(node)) {
@@ -90,28 +86,26 @@ catch (o_O) {
             callback(node, connected);
           }
           if (!pass)
-            loop(node[QSA$1]('*'), added, removed, connected, TRUE);
+            loop(node[QSA$1](selectors), selectors, added, removed, connected, TRUE);
         }
       }
     };
   
-    const observer = new (MO || MutationObserver)(records => {
-      for (let
-        added = new Set,
-        removed = new Set,
-        i = 0, {length} = records;
-        i < length; i++
-      ) {
-        const {addedNodes, removedNodes} = records[i];
-        loop(removedNodes, added, removed, FALSE, FALSE);
-        loop(addedNodes, added, removed, TRUE, FALSE);
+    const mo = new MO(records => {
+      if (query.length) {
+        const selectors = query.join(',');
+        const added = new Set, removed = new Set;
+        for (const {addedNodes, removedNodes} of records) {
+          loop(removedNodes, selectors, added, removed, FALSE, FALSE);
+          loop(addedNodes, selectors, added, removed, TRUE, FALSE);
+        }
       }
     });
   
-    observer.add = add;
-    observer.add(root || document);
+    const {observe} = mo;
+    (mo.observe = node => observe.call(mo, node, {subtree: TRUE, childList: TRUE}))(root);
   
-    return observer;
+    return mo;
   };
   
   const QSA = 'querySelectorAll';
@@ -168,12 +162,12 @@ catch (o_O) {
     };
     const {query} = options;
     const root = options.root || document$2;
-    const observer = notify(notifier, root, MutationObserver$2);
+    const observer = notify(notifier, root, MutationObserver$2, query);
     const {attachShadow} = Element$1.prototype;
     if (attachShadow)
       Element$1.prototype.attachShadow = function (init) {
         const shadowRoot = attachShadow.call(this, init);
-        observer.add(shadowRoot);
+        observer.observe(shadowRoot);
         return shadowRoot;
       };
     if (query.length)
@@ -187,7 +181,6 @@ catch (o_O) {
     Map: Map$1, Set: Set$1, WeakMap, Reflect
   } = self;
   
-  const {attachShadow} = Element.prototype;
   const {createElement} = document$1;
   const {define: define$1, get, upgrade} = customElements$1;
   const {construct} = Reflect || {construct(HTMLElement) {
@@ -240,6 +233,16 @@ catch (o_O) {
       }
     }
   });
+  
+  // qsaObserver also patches attachShadow
+  // be sure this runs *after* that
+  const {attachShadow} = Element.prototype;
+  if (attachShadow)
+    Element.prototype.attachShadow = function (init) {
+      const root = attachShadow.call(this, init);
+      shadowRoots.set(this, root);
+      return root;
+    };
   
   const whenDefined = name => {
     if (!defined.has(name)) {
@@ -296,13 +299,6 @@ catch (o_O) {
       return element;
     }
   });
-  
-  if (attachShadow)
-    Element.prototype.attachShadow = function (init) {
-      const root = attachShadow.call(this, init);
-      shadowRoots.set(this, root);
-      return root;
-    };
   
   defineProperty(customElements$1, 'get', {
     configurable: true,
@@ -366,50 +362,52 @@ catch (o_O) {
     const root = shadowRoots.get(element);
     parse(root.querySelectorAll(this), element.isConnected);
   }
-  
-  const EMPTY = '';
-  const HEADING = 'Heading';
-  const TABLECELL = 'TableCell';
-  const TABLE_SECTION = 'TableSection';
-  
-  const ELEMENT = 'Element';
-  
-  const qualify = name => ('HTML' + (namespace[name] || '') + ELEMENT);
-  
-  const namespace = {
-    A: 'Anchor',
-    Caption: 'TableCaption',
-    DL: 'DList',
-    Dir: 'Directory',
-    Img: 'Image',
-    OL: 'OList',
-    P: 'Paragraph',
-    TR: 'TableRow',
-    UL: 'UList',
-  
-    Article: EMPTY,
-    Aside: EMPTY,
-    Footer: EMPTY,
-    Header: EMPTY,
-    Main: EMPTY,
-    Nav: EMPTY,
-    [ELEMENT]: EMPTY,
-  
-    H1: HEADING,
-    H2: HEADING,
-    H3: HEADING,
-    H4: HEADING,
-    H5: HEADING,
-    H6: HEADING,
-  
-    TD: TABLECELL,
-    TH: TABLECELL,
-  
-    TBody: TABLE_SECTION,
-    TFoot: TABLE_SECTION,
-    THead: TABLE_SECTION,
-  };
 }
+
+const EMPTY = '';
+const HEADING = 'Heading';
+const TABLECELL = 'TableCell';
+const TABLE_SECTION = 'TableSection';
+
+const ELEMENT = 'Element';
+
+const qualify = name => ('HTML' + (name in namespace ? namespace[name] : name) + ELEMENT);
+
+const namespace = {
+  A: 'Anchor',
+  Caption: 'TableCaption',
+  DL: 'DList',
+  Dir: 'Directory',
+  Img: 'Image',
+  OL: 'OList',
+  P: 'Paragraph',
+  TR: 'TableRow',
+  UL: 'UList',
+
+  Article: EMPTY,
+  Aside: EMPTY,
+  Footer: EMPTY,
+  Header: EMPTY,
+  Main: EMPTY,
+  Nav: EMPTY,
+  [ELEMENT]: EMPTY,
+
+  H1: HEADING,
+  H2: HEADING,
+  H3: HEADING,
+  H4: HEADING,
+  H5: HEADING,
+  H6: HEADING,
+
+  TD: TABLECELL,
+  TH: TABLECELL,
+
+  TBody: TABLE_SECTION,
+  TFoot: TABLE_SECTION,
+  THead: TABLE_SECTION,
+};
+
+
 
 const EXTENDS = Symbol('extends');
 

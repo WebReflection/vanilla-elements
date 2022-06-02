@@ -13,6 +13,7 @@
  * @property {HTMLAnchorElement} A - a builtin custom element
  * @property {HTMLDListElement} DL - a builtin custom element
  * @property {HTMLDirectoryElement} Dir - a builtin custom element
+ * @property {HTMLDivElement} Div - a builtin custom element
  * @property {HTMLHeadingElement} H6 - a builtin custom element
  * @property {HTMLHeadingElement} H5 - a builtin custom element
  * @property {HTMLHeadingElement} H4 - a builtin custom element

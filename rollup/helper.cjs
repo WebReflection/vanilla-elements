@@ -1,12 +1,15 @@
 const {readFileSync, writeFileSync} = require('fs');
 const {join} = require('path');
+const lookFor = `const EMPTY = '';`;
 
 const fileName = join(__dirname, '..', 'index.js');
 
 const content = readFileSync(fileName).toString();
 
-const before = content.replace(/^([\s\S]+?)\/\*! \(c\) Andrea Giammarchi - ISC \*\/[\s\S]+$/, '$1');
-const after = content.replace(/^[\s\S]+?\/\*! \(c\) Andrea Giammarchi - ISC \*\/([\s\S]+)$/, '$1');
+const chunks = content.split(lookFor);
+
+const before = chunks.shift().replace(/\/\*! \(c\) Andrea Giammarchi - ISC \*\//g, '');
+const after = ['', ...chunks].join(lookFor).replace(/\/\*! \(c\) Andrea Giammarchi - ISC \*\//g, '');
 
 writeFileSync(
   fileName,
