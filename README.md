@@ -2,6 +2,10 @@
 
 <sup>**Social Media Photo by [Jocelyn Morales](https://unsplash.com/@molnj) on [Unsplash](https://unsplash.com/)**</sup>
 
+📣 This project didn't gain nearly nough attention as hoped so I've decided to extend builtins with [nonchalance](https://github.com/WebReflection/nonchalance#readme) and I suggest you check that out instead, as it doesn't rely at all to a *maybe* polyfill needed to work, it doesn't need to patch globals, and most importantly, it's half of the size of this module through its */runtime* variant.
+
+- - -
+
 A Minimalistic Custom Elements Helper, with optional polyfill included, compatible with every evergreen browser.
 
 The default module export, which is ~0.5K, works natively in Chrome, Edge, and Firefox, but if you target Safari / WebKit too, you can use the `vanilla-elements/poly` variant, which is ~2K, and it includes proper features detection, leaving Chrome, Edge, and Firefox 100% native.
